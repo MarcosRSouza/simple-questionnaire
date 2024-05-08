@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 function Questions() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [questionsAreFinished, setQuestionsAreFinished] = useState(false);
+    const [formQuestions, setFormQuestions] = useState([]);
+    const [currentFormQuestions, setCurrentFormQuestions] = useState({});
     const mockQuestions = [
         {
             questionTitle: 'question 01',
@@ -16,11 +18,18 @@ function Questions() {
             questionOptions: [{ title: 'lorem21' }, { title: 'lorem22' }, { title: 'lorem23' }, { title: 'lorem24' }]
         }];
 
+    const handleInputChange = (e) => {
+        setCurrentFormQuestions({
+            title: mockQuestions[currentQuestionIndex]?.questionContent,
+            answer: e?.target?.id,
+        });
+    }
+
     const questionsOptions = (
         <ul>
             {mockQuestions[currentQuestionIndex]?.questionOptions?.map(answer =>
                 <li key={answer?.title}>
-                    <input id={answer?.title} type="radio" name="question_answer" />
+                    <input id={answer?.title} type="radio" name="question_answer" onChange={(e) => handleInputChange(e)} />
                     <label htmlFor={answer?.title}>{answer?.title}</label>
                 </li>
             )}
@@ -35,6 +44,9 @@ function Questions() {
 
     const handleNextQuestion = () => {
         if (!questionsAreFinished) {
+            const tempArray = formQuestions;
+            tempArray.push(currentFormQuestions);
+            setFormQuestions(tempArray);
             setCurrentQuestionIndex(currentQuestionIndex + 1)
         }
         // else {
