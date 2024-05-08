@@ -18,7 +18,12 @@ function Questions() {
 
     const questionsOptions = (
         <ul>
-            {mockQuestions[currentQuestionIndex]?.questionOptions?.map(answer => <li key={answer?.title}>{answer?.title}</li>)}
+            {mockQuestions[currentQuestionIndex]?.questionOptions?.map(answer =>
+                <li key={answer?.title}>
+                    <input id={answer?.title} type="radio" name="question_answer" />
+                    <label htmlFor={answer?.title}>{answer?.title}</label>
+                </li>
+            )}
         </ul>
     );
 
