@@ -28,6 +28,15 @@ function Questions() {
         }
     }, [currentQuestionIndex, mockQuestions]);
 
+    const handleNextQuestion = () => {
+        if (!questionsAreFinished) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1)
+        }
+        // else {
+
+        // }
+    }
+
     if (questionsAreFinished) {
         return <h1>You finished all questions, congratulations</h1>
     }
@@ -40,7 +49,7 @@ function Questions() {
                 <p>{mockQuestions[currentQuestionIndex]?.questionContent}</p>
                 {questionsOptions}
             </div>
-            <button onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}>Próximo</button>
+            <button onClick={() => handleNextQuestion()}>{currentQuestionIndex !== mockQuestions?.length - 1 ? 'Próximo' : 'Submeter'}</button>
         </>
     )
 }
