@@ -3,31 +3,20 @@ import { useState, useEffect } from "react";
 function Questions() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [questionsAreFinished, setQuestionsAreFinished] = useState(false);
+    const [questions, setQuestions] = useState([]);
     const [formQuestions, setFormQuestions] = useState([]);
     const [currentFormQuestions, setCurrentFormQuestions] = useState({});
-    const mockQuestions = [
-        {
-            questionTitle: 'question 01',
-            questionContent: 'lorem ipsum dolor sit amet, consectetur adip',
-            questionOptionsType: 'simple',
-            questionOptions: [{ title: 'lorem1' }, { title: 'lorem2' }, { title: 'lorem3' }, { title: 'lorem4' }]
-        }, {
-            questionTitle: 'question 02',
-            questionContent: 'lorem olx bando de ***, ',
-            questionOptionsType: 'simple',
-            questionOptions: [{ title: 'lorem21' }, { title: 'lorem22' }, { title: 'lorem23' }, { title: 'lorem24' }]
-        }];
 
     const handleInputChange = (e) => {
         setCurrentFormQuestions({
-            title: mockQuestions[currentQuestionIndex]?.questionContent,
+            title: questions[currentQuestionIndex]?.questionContent,
             answer: e?.target?.id,
         });
     }
 
     const questionsOptions = (
         <ul>
-            {mockQuestions[currentQuestionIndex]?.questionOptions?.map(answer =>
+            {questions[currentQuestionIndex]?.questionOptions?.map(answer =>
                 <li key={answer?.title}>
                     <input id={answer?.title} type="radio" name="question_answer" onChange={(e) => handleInputChange(e)} />
                     <label htmlFor={answer?.title}>{answer?.title}</label>
@@ -37,36 +26,52 @@ function Questions() {
     );
 
     useEffect(() => {
-        if (currentQuestionIndex > mockQuestions?.length - 1) {
+        fetch("http://localhost:8000/questions")
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw response;
+            })
+            .then(data => {
+                setQuestions(data)
+            })
+            .catch((error) => console.error("Error fetching data, ", error));
+    }, []);
+
+    useEffect(() => {
+        if (currentQuestionIndex > questions?.length - 1) {
             setQuestionsAreFinished(true);
         }
-    }, [currentQuestionIndex, mockQuestions]);
+    }, [currentQuestionIndex, questions]);
 
     const handleNextQuestion = () => {
-        if (!questionsAreFinished) {
+        if (currentQuestionIndex <= questions?.length - 1) {
             const tempArray = formQuestions;
             tempArray.push(currentFormQuestions);
             setFormQuestions(tempArray);
             setCurrentQuestionIndex(currentQuestionIndex + 1)
         }
+        // FIXME: adjust post request when form is finished!
         // else {
-
+        //     setQuestionsAreFinished(true);
+        //     fetch("http://localhost:8000/questions", {
+        //         method: "POST",
+        //         mode: "cors",
+        //         body: formQuestions
+        //     });
         // }
-    }
-
-    if (questionsAreFinished) {
-        return <h1>You finished all questions, congratulations</h1>
     }
 
     return (
         <>
             <h1>This is the questions page</h1>
             <div>
-                <h2>{mockQuestions[currentQuestionIndex]?.questionTitle}</h2>
-                <p>{mockQuestions[currentQuestionIndex]?.questionContent}</p>
+                <h2>{questions[currentQuestionIndex]?.questionTitle}</h2>
+                <p>{questions[currentQuestionIndex]?.questionContent}</p>
                 {questionsOptions}
             </div>
-            <button onClick={() => handleNextQuestion()}>{currentQuestionIndex !== mockQuestions?.length - 1 ? 'Próximo' : 'Submeter'}</button>
+            <button onClick={() => handleNextQuestion()}>{currentQuestionIndex !== questions?.length - 1 ? 'Próximo' : 'Submeter'}</button>
         </>
     )
 }
