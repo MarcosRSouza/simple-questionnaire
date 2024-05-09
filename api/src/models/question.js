@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Question.init({
     title: DataTypes.STRING,
     content: DataTypes.TEXT,
-    type: DataTypes.ENUM
+    type: DataTypes.ENUM('simple', 'multiple', 'dropdown'),
   }, {
     sequelize,
     modelName: 'Question',
