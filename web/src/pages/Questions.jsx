@@ -9,17 +9,17 @@ function Questions() {
 
     const handleInputChange = (e) => {
         setCurrentFormQuestions({
-            title: questions[currentQuestionIndex]?.questionContent,
+            title: questions[currentQuestionIndex]?.question_content,
             answer: e?.target?.id,
         });
     }
 
     const questionsOptions = (
         <ul>
-            {questions[currentQuestionIndex]?.questionOptions?.map(answer =>
-                <li key={answer?.title}>
-                    <input id={answer?.title} type="radio" name="question_answer" onChange={(e) => handleInputChange(e)} />
-                    <label htmlFor={answer?.title}>{answer?.title}</label>
+            {questions[currentQuestionIndex]?.question_options?.map(answer =>
+                <li key={answer?.answer_content}>
+                    <input id={answer?.answer_content} type="radio" name="question_answer" onChange={(e) => handleInputChange(e)} />
+                    <label htmlFor={answer?.answer_content}>{answer?.answer_content}</label>
                 </li>
             )}
         </ul>
@@ -67,8 +67,8 @@ function Questions() {
         <>
             <h1>This is the questions page</h1>
             <div>
-                <h2>{questions[currentQuestionIndex]?.questionTitle}</h2>
-                <p>{questions[currentQuestionIndex]?.questionContent}</p>
+                <h2>{questions[currentQuestionIndex]?.question_title}</h2>
+                <p>{questions[currentQuestionIndex]?.question_content}</p>
                 {questionsOptions}
             </div>
             <button onClick={() => handleNextQuestion()}>{currentQuestionIndex !== questions?.length - 1 ? 'Próximo' : 'Submeter'}</button>
